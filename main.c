@@ -5,19 +5,24 @@
 #define MAX_FILE_NAME_SIZE 200
 #define FREQ_SIZE 256
 
-typedef struct NoArvore
+typedef struct No
 {
     void *ch;
     void *frq;
     void *prx;
     void *esq;
     void *dir;
-} NoArvore;
+} No;
 
 typedef struct Lista
 {
-    NoArvore *cabeca;
+    No *cabeca;
 } Lista;
+
+typedef struct Arvore
+{
+    No *raiz;
+} Arvore;
 
 typedef enum Mode
 {
@@ -83,7 +88,7 @@ void get_frequencias(int frequencias[], char *file_nome)
 
 void add_ordenado(Lista *lista, char c, int freq)
 {
-    NoArvore *novo_no = malloc(sizeof(NoArvore));
+    No *novo_no = malloc(sizeof(No));
     *(char *)novo_no->ch = c;
     *(int *)novo_no->frq = freq;
     novo_no->dir = NULL;
@@ -94,7 +99,7 @@ void add_ordenado(Lista *lista, char c, int freq)
         lista->cabeca = novo_no;
     else
     {
-        NoArvore *atual = lista->cabeca;
+        No *atual = lista->cabeca;
         while (atual->prx != NULL && atual->prx < novo_no->frq)
             atual = atual->prx;
         novo_no->prx = atual->prx;
@@ -102,18 +107,13 @@ void add_ordenado(Lista *lista, char c, int freq)
     }
 }
 
-Lista *get_lista(int frequencias[])
+void get_lista(Lista *lista, int frequencias[])
 {
-    Lista *lista = malloc(sizeof(lista));
-    lista->cabeca = NULL;
-
     for (int i = 0; i < FREQ_SIZE; i++)
     {
         if (frequencias[i])
             add_ordenado(lista, (char)i, frequencias[i]);
     }
-
-    return lista;
 }
 
 int main(void)
@@ -127,9 +127,11 @@ int main(void)
         frequencias[i] = 0;
     get_frequencias(frequencias, file_nome);
 
-    Lista *lista = get_lista(frequencias);
+    Lista *lista = malloc(sizeof(lista));
+    lista->cabeca = NULL;
+    get_lista(lista, frequencias);
 
-    // TODO
+    Arvore *arvore = get_arvore(lista);
 
     free(file_nome);
     free(lista);
