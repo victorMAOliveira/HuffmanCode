@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_FILE_NAME_SIZE 100
-#define FREQ_SIZE 250
+#define MAX_FILE_NAME_SIZE 200
+#define FREQ_SIZE 256
 
 typedef struct NoArvore
 {
@@ -65,7 +65,7 @@ void get_file_nome(char *file_nome)
     }
 }
 
-void get_frequencias(int frequencias[], const char *file_nome)
+void get_frequencias(int frequencias[], char *file_nome)
 {
     FILE *file = fopen(file_nome, "r");
     if (!file)
