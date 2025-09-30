@@ -14,6 +14,11 @@ typedef struct NoArvore
     void *dir;
 } NoArvore;
 
+typedef struct Lista
+{
+    NoArvore *cabeca;
+} Lista;
+
 typedef enum Mode
 {
     COMPRIMIR,
@@ -34,10 +39,15 @@ Mode get_modo()
         printf("MODO SELECIONADO: >> COMPRIMIR <<\n");
         return COMPRIMIR;
     }
-    else
+    else if (resp == 'd')
     {
         printf("MODO SELECIONADO: >> DESCOMPRIMIR <<\n");
         return DESCOMPRIMIR;
+    }
+    else
+    {
+        fprintf(stderr, "MODO INVALIDO SELECIONADO\n");
+        exit(1);
     }
 }
 
@@ -71,6 +81,41 @@ void get_frequencias(int frequencias[], const char *file_nome)
     fclose(file);
 }
 
+void add_ordenado(Lista *lista, char c, int freq)
+{
+    NoArvore *novo_no = malloc(sizeof(NoArvore));
+    *(char *)novo_no->ch = c;
+    *(int *)novo_no->frq = freq;
+    novo_no->dir = NULL;
+    novo_no->esq = NULL;
+    novo_no->prx = NULL;
+
+    if (!lista->cabeca)
+        lista->cabeca = novo_no;
+    else
+    {
+        NoArvore *atual = lista->cabeca;
+        while (atual->prx != NULL && atual->prx < novo_no->frq)
+            atual = atual->prx;
+        novo_no->prx = atual->prx;
+        atual->prx = novo_no;
+    }
+}
+
+Lista *get_lista(int frequencias[])
+{
+    Lista *lista = malloc(sizeof(lista));
+    lista->cabeca = NULL;
+
+    for (int i = 0; i < FREQ_SIZE; i++)
+    {
+        if (frequencias[i])
+            add_ordenado(lista, (char)i, frequencias[i]);
+    }
+
+    return lista;
+}
+
 int main(void)
 {
     Mode modo = get_modo();
@@ -82,9 +127,12 @@ int main(void)
         frequencias[i] = 0;
     get_frequencias(frequencias, file_nome);
 
+    Lista *lista = get_lista(frequencias);
+
     // TODO
 
     free(file_nome);
+    free(lista);
 
     return 0;
 }
