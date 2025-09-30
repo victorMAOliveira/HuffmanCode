@@ -5,14 +5,14 @@
 #define MAX_FILE_NAME_SIZE 100
 #define FREQ_SIZE 250
 
-typedef struct No
+typedef struct NoArvore
 {
     void *ch;
     void *frq;
     void *prx;
     void *esq;
     void *dir;
-} No;
+} NoArvore;
 
 typedef enum Mode
 {
@@ -81,6 +81,8 @@ int main(void)
     for (int i = 0; i < FREQ_SIZE; i++)
         frequencias[i] = 0;
     get_frequencias(frequencias, file_nome);
+
+    // TODO
 
     free(file_nome);
 
