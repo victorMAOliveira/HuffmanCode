@@ -3,6 +3,7 @@
 #include <string.h>
 
 #define MAX_FILE_NAME_SIZE 100
+#define FREQ_SIZE 250
 
 typedef struct No
 {
@@ -12,11 +13,6 @@ typedef struct No
     void *esq;
     void *dir;
 } No;
-
-typedef struct Lista
-{
-    void *cabeca;
-} Lista;
 
 typedef enum Mode
 {
@@ -45,22 +41,46 @@ Mode get_modo()
     }
 }
 
-char *get_file_nome()
+void get_file_nome(char *file_nome)
 {
-    char *file_nome = malloc(sizeof(char) * MAX_FILE_NAME_SIZE);
-
     printf("\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
     printf("POR FAVOR, INSIRA O 'PATH' PARA O ARQUIVO DESEJADO:\n");
     fgets(file_nome, MAX_FILE_NAME_SIZE, stdin);
-    file_nome[strcspn(file_nome, "\n")] = '\0';
+    if (file_nome)
+        file_nome[strcspn(file_nome, "\n")] = '\0';
+    else
+    {
+        fprintf(stderr, "NOME DE ARQUIVO INVALIDO\n");
+        exit(1);
+    }
+}
 
-    return file_nome;
+void get_frequencias(int frequencias[], const char *file_nome)
+{
+    FILE *file = fopen(file_nome, "r");
+    if (!file)
+    {
+        fprintf(stderr, "NAO FOI POSSIVEL ABRIR O ARQUIVO EM get_frequencias\n");
+        exit(1);
+    }
+    char c;
+
+    while ((c = fgetc(file)) != EOF)
+        frequencias[c]++;
+
+    fclose(file);
 }
 
 int main(void)
 {
     Mode modo = get_modo();
-    char *file_nome = get_file_nome();
+    char *file_nome = malloc(sizeof(char) * MAX_FILE_NAME_SIZE);
+    get_file_nome(file_nome);
+
+    int frequencias[FREQ_SIZE];
+    for (int i = 0; i < FREQ_SIZE; i++)
+        frequencias[i] = 0;
+    get_frequencias(frequencias, file_nome);
 
     free(file_nome);
 
