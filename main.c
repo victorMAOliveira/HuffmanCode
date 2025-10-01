@@ -2,35 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_FILE_NAME_SIZE 200
+#define MAX_FILE_NAME_SIZE 1024
 #define FREQ_SIZE 256
-
-typedef struct No
-{
-    void *ch;
-    void *frq;
-    void *prx;
-    void *esq;
-    void *dir;
-} No;
-
-typedef struct Lista
-{
-    No *cabeca;
-} Lista;
-
-typedef struct Arvore
-{
-    No *raiz;
-} Arvore;
 
 typedef enum Mode
 {
-    COMPRIMIR,
-    DESCOMPRIMIR
+    COMP,
+    EXTR
 } Mode;
 
-Mode get_modo()
+Mode get_mode()
 {
     char resp;
 
@@ -38,16 +19,17 @@ Mode get_modo()
     printf("OLA, AVENTUREIRO DA COMPUTACAO, QUAL FUNCAO DE NOSSO PROGRAMA QUERES USUFRUIR?\n");
     printf("PRESSIONE 'c' PARA COMPRIMIR ARQUIVO OU 'd' PARA DESCOMPRIMIR: ");
     scanf("%c", &resp);
+    while (getchar() != '\n');
 
     if (resp == 'c')
     {
         printf("MODO SELECIONADO: >> COMPRIMIR <<\n");
-        return COMPRIMIR;
+        return COMP;
     }
     else if (resp == 'd')
     {
         printf("MODO SELECIONADO: >> DESCOMPRIMIR <<\n");
-        return DESCOMPRIMIR;
+        return EXTR;
     }
     else
     {
@@ -56,85 +38,90 @@ Mode get_modo()
     }
 }
 
-void get_file_nome(char *file_nome)
+void get_file_content(unsigned char **content, char *file_name)
 {
     printf("\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
     printf("POR FAVOR, INSIRA O 'PATH' PARA O ARQUIVO DESEJADO:\n");
-    fgets(file_nome, MAX_FILE_NAME_SIZE, stdin);
-    if (file_nome)
-        file_nome[strcspn(file_nome, "\n")] = '\0';
+    fgets(file_name, MAX_FILE_NAME_SIZE, stdin);
+    if (file_name)
+        file_name[strcspn(file_name, "\n")] = '\0';
     else
     {
         fprintf(stderr, "NOME DE ARQUIVO INVALIDO\n");
         exit(1);
     }
-}
 
-void get_frequencias(int frequencias[], char *file_nome)
-{
-    FILE *file = fopen(file_nome, "r");
-    if (!file)
-    {
-        fprintf(stderr, "NAO FOI POSSIVEL ABRIR O ARQUIVO EM get_frequencias\n");
+    FILE *file = fopen(file_name, "rb");
+    if (file == NULL) {
+        fprintf(stderr, "ERRO: NAO FOI POSSIVEL ABRIR O ARQUIVO '%s'\n", file_name);
         exit(1);
     }
-    char c;
 
-    while ((c = fgetc(file)) != EOF)
-        frequencias[c]++;
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    *content = (unsigned char *)malloc(sizeof(unsigned char) * (file_size + 1));
+    if (*content == NULL) {
+        fprintf(stderr, "ERRO: FALHA NA ALOCACAO DE MEMORIA\n");
+        exit(1);
+    }
+
+    size_t bytes_read = fread(*content, sizeof(unsigned char), file_size, file);
+    if (bytes_read != file_size) {
+        fprintf(stderr, "ERRO: NAO FOI POSSIVEL LER O ARQUIVO COMPLETAMENTE\n");
+        exit(1);
+    }
+    (*content)[file_size] = '\0';
 
     fclose(file);
 }
 
-void add_ordenado(Lista *lista, char c, int freq)
+void get_freq(unsigned char *content, unsigned int freq[])
 {
-    No *novo_no = malloc(sizeof(No));
-    *(char *)novo_no->ch = c;
-    *(int *)novo_no->frq = freq;
-    novo_no->dir = NULL;
-    novo_no->esq = NULL;
-    novo_no->prx = NULL;
+    unsigned int i = 0;
+    while (content[i] != '\0')
+    {
+        freq[content[i]]++;
+        i++;
+    }
+}
 
-    if (!lista->cabeca)
-        lista->cabeca = novo_no;
+void print_freq(unsigned int freq[])
+{
+    for (int i = 0; i < FREQ_SIZE; i++)
+    {
+        if (freq[i])
+            printf("\t%d = %d = %c\n", i, freq[i], i);
+    }
+}
+
+int main()
+{
+    Mode mode = get_mode();
+
+    unsigned char *content = NULL;
+    char *file_name = malloc(MAX_FILE_NAME_SIZE * sizeof(char));;
+    get_file_content(&content, file_name);
+
+    if (mode == COMP)
+    {
+        unsigned int freq[FREQ_SIZE];
+        for (int i = 0; i < FREQ_SIZE; i++)
+        {
+            freq[i] = 0;
+        }
+        get_freq(content, freq);
+
+
+    }
     else
     {
-        No *atual = lista->cabeca;
-        while (atual->prx != NULL && atual->prx < novo_no->frq)
-            atual = atual->prx;
-        novo_no->prx = atual->prx;
-        atual->prx = novo_no;
+
     }
-}
 
-void get_lista(Lista *lista, int frequencias[])
-{
-    for (int i = 0; i < FREQ_SIZE; i++)
-    {
-        if (frequencias[i])
-            add_ordenado(lista, (char)i, frequencias[i]);
-    }
-}
-
-int main(void)
-{
-    Mode modo = get_modo();
-    char *file_nome = malloc(sizeof(char) * MAX_FILE_NAME_SIZE);
-    get_file_nome(file_nome);
-
-    int frequencias[FREQ_SIZE];
-    for (int i = 0; i < FREQ_SIZE; i++)
-        frequencias[i] = 0;
-    get_frequencias(frequencias, file_nome);
-
-    Lista *lista = malloc(sizeof(lista));
-    lista->cabeca = NULL;
-    get_lista(lista, frequencias);
-
-    Arvore *arvore = get_arvore(lista);
-
-    free(file_nome);
-    free(lista);
+    free(file_name);
+    free(content);
 
     return 0;
 }
