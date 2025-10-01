@@ -1,3 +1,4 @@
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,6 +11,16 @@ typedef enum Mode
     COMP,
     EXTR
 } Mode;
+
+typedef struct Node
+{
+    void *c, *freq, *next, *left, *right;
+} Node;
+
+typedef struct List
+{
+    void *head, *size;
+} List;
 
 Mode get_mode()
 {
@@ -96,8 +107,79 @@ void print_freq(unsigned int freq[])
     }
 }
 
+void create_list(List *list)
+{
+    list->head = NULL;
+    list->size = malloc(sizeof(int));
+    *(int *)list->size = 0;
+}
+
+void insert_sorted(List *list, Node *node)
+{
+    if (!list->head)
+    {
+        list->head = node;
+    }
+    else if (*(unsigned int *)node->freq < *(unsigned int *)((Node *)list->head)->freq)
+    {
+        node->next = list->head;
+        list->head = node;
+    }
+    else
+    {
+        Node *aux = list->head;
+        while (aux->next && *(unsigned int *)((Node *)aux->next)->freq <= *(unsigned int *)node->freq)
+            aux = aux->next;
+        node->next = aux->next;
+        aux->next = node;
+    }
+
+    *(int *)list->size += 1;
+}
+
+void fill_list(unsigned int freq[], List *list)
+{
+    for (int i = 0; i < FREQ_SIZE; i++)
+    {
+        if (freq[i])
+        {
+            Node *new = malloc(sizeof(Node));
+            if (new)
+            {
+                new->c = malloc(sizeof(unsigned char));
+                new->freq = malloc(sizeof(unsigned int));
+                *(unsigned char *)new->c = i;
+                *(unsigned int *)new->freq = freq[i];
+                new->next = NULL;
+                new->left = NULL;
+                new->right = NULL;
+
+                insert_sorted(list, new);
+            }
+            else
+            {
+                printf("erro alocar memoria em fill_list\n");
+                break;
+            }
+        }
+    }
+}
+
+void print_list(List *list)
+{
+    Node *aux = list->head;
+
+    while (aux)
+    {
+        printf("\tCaracter: %c Frequencia: %u\n", *(char *)aux->c, *(unsigned int *)aux->freq);
+        aux = aux->next;
+    }
+}
+
 int main()
 {
+    setlocale(LC_ALL, "Portuguese");
+
     Mode mode = get_mode();
 
     unsigned char *content = NULL;
@@ -112,10 +194,16 @@ int main()
             freq[i] = 0;
         }
         get_freq(content, freq);
+
+        List list;
+        create_list(&list);
+        fill_list(freq, &list);
+
+
     }
     else
     {
-
+        // TODO
     }
 
     free(file_name);
