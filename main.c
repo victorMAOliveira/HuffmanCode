@@ -112,8 +112,6 @@ int main()
             freq[i] = 0;
         }
         get_freq(content, freq);
-
-
     }
     else
     {
