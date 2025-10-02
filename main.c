@@ -194,11 +194,12 @@ int main()
             freq[i] = 0;
         }
         get_freq(content, freq);
+        print_freq(freq);
 
         List list;
         create_list(&list);
         fill_list(freq, &list);
-
+        print_list(&list);
 
     }
     else
