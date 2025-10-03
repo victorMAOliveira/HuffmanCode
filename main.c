@@ -3,14 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_FILE_NAME_SIZE 1024
 #define FREQ_SIZE 256
-
-typedef enum Mode
-{
-    COMP,
-    EXTR
-} Mode;
 
 typedef struct Node
 {
@@ -21,72 +14,6 @@ typedef struct List
 {
     void *head, *size;
 } List;
-
-Mode get_mode()
-{
-    char resp;
-
-    printf("\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-    printf("OLA, AVENTUREIRO DA COMPUTACAO, QUAL FUNCAO DE NOSSO PROGRAMA QUERES USUFRUIR?\n");
-    printf("PRESSIONE 'c' PARA COMPRIMIR ARQUIVO OU 'd' PARA DESCOMPRIMIR: ");
-    scanf("%c", &resp);
-    while (getchar() != '\n');
-
-    if (resp == 'c')
-    {
-        printf("MODO SELECIONADO: >> COMPRIMIR <<\n");
-        return COMP;
-    }
-    else if (resp == 'd')
-    {
-        printf("MODO SELECIONADO: >> DESCOMPRIMIR <<\n");
-        return EXTR;
-    }
-    else
-    {
-        fprintf(stderr, "MODO INVALIDO SELECIONADO\n");
-        exit(1);
-    }
-}
-
-void get_file_content(unsigned char **content, char *file_name)
-{
-    printf("\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-    printf("POR FAVOR, INSIRA O 'PATH' PARA O ARQUIVO DESEJADO:\n");
-    fgets(file_name, MAX_FILE_NAME_SIZE, stdin);
-    if (file_name)
-        file_name[strcspn(file_name, "\n")] = '\0';
-    else
-    {
-        fprintf(stderr, "NOME DE ARQUIVO INVALIDO\n");
-        exit(1);
-    }
-
-    FILE *file = fopen(file_name, "rb");
-    if (file == NULL) {
-        fprintf(stderr, "ERRO: NAO FOI POSSIVEL ABRIR O ARQUIVO '%s'\n", file_name);
-        exit(1);
-    }
-
-    fseek(file, 0, SEEK_END);
-    long file_size = ftell(file);
-    fseek(file, 0, SEEK_SET);
-
-    *content = (unsigned char *)malloc(sizeof(unsigned char) * (file_size + 1));
-    if (*content == NULL) {
-        fprintf(stderr, "ERRO: FALHA NA ALOCACAO DE MEMORIA\n");
-        exit(1);
-    }
-
-    size_t bytes_read = fread(*content, sizeof(unsigned char), file_size, file);
-    if (bytes_read != file_size) {
-        fprintf(stderr, "ERRO: NAO FOI POSSIVEL LER O ARQUIVO COMPLETAMENTE\n");
-        exit(1);
-    }
-    (*content)[file_size] = '\0';
-
-    fclose(file);
-}
 
 void get_freq(unsigned char *content, unsigned int freq[])
 {
@@ -111,7 +38,7 @@ void create_list(List *list)
 {
     list->head = NULL;
     list->size = malloc(sizeof(int));
-    *(int *)list->size = 0;
+    *(unsigned int *)list->size = 0;
 }
 
 void insert_sorted(List *list, Node *node)
@@ -134,7 +61,7 @@ void insert_sorted(List *list, Node *node)
         aux->next = node;
     }
 
-    *(int *)list->size += 1;
+    *(unsigned int *)list->size += 1;
 }
 
 void fill_list(unsigned int freq[], List *list)
@@ -168,7 +95,6 @@ void fill_list(unsigned int freq[], List *list)
 void print_list(List *list)
 {
     Node *aux = list->head;
-
     while (aux)
     {
         printf("\tCaracter: %c Frequencia: %u\n", *(char *)aux->c, *(unsigned int *)aux->freq);
@@ -176,39 +102,156 @@ void print_list(List *list)
     }
 }
 
+Node *remove_begin(List *list)
+{
+    Node *aux = NULL;
+    if (list->head)
+    {
+        aux = list->head;
+        list->head = aux->next;
+        aux->next = NULL;
+        *(unsigned int *)list->size -= 1;
+    }
+    return aux;
+}
+
+Node *build_tree(List *list)
+{
+    Node *first, *second, *new;
+    while (*(unsigned int *)list->size > 1)
+    {
+        first = remove_begin(list);
+        second = remove_begin(list);
+        new = malloc(sizeof(Node));
+        if (new)
+        {
+            new->c = malloc(sizeof(unsigned char));
+            new->freq = malloc(sizeof(unsigned int));
+            *(unsigned char *)new->c = '*';
+            *(unsigned int *)new->freq = *(unsigned int *)first->freq + *(unsigned int *)second->freq;
+            new->left = first;
+            new->right = second;
+            new->next = NULL;
+            insert_sorted(list, new);
+        }
+        else
+        {
+            printf("erro alocar mem em build_tree\n");
+            break;
+        }
+    }
+    return list->head;
+}
+
+void print_tree(Node *root, unsigned int size)
+{
+    if (!root->left && !root->right)
+        printf("folha: %c\taltura: %u\n", *(unsigned char *)root->c, size);
+    else
+    {
+        print_tree(root->left, size + 1);
+        print_tree(root->right, size + 1);
+    }
+}
+
+int tree_height(Node *root)
+{
+    if (!root)
+        return -1;
+    else
+    {
+        int left = tree_height(root->left) + 1;
+        int right = tree_height(root->right) + 1;
+        if (left > right)
+            return left;
+        else
+            return right;
+    }
+}
+
+char **allocate_table(int columns)
+{
+    char **table = malloc(sizeof(char *) * FREQ_SIZE);
+    for (int i = 0; i < FREQ_SIZE; i++)
+        table[i] = calloc(columns, sizeof(char));
+    return table;
+}
+
+void build_table(char **table, Node *root, char *path, int columns)
+{
+    if (!root->left && !root->right)
+        strcpy(table[*(unsigned char *)root->c], path);
+    else
+    {
+        char left[columns], right[columns];
+        strcpy(left, path);
+        strcpy(right, path);
+        strcat(left, "0");
+        strcat(right, "1");
+        build_table(table, root->left, left, columns);
+        build_table(table, root->right, right, columns);
+    }
+}
+
+void print_table(char **table)
+{
+    for (int i = 0; i < FREQ_SIZE; i++)
+    {
+        if (strlen(table[i]) > 0)
+            printf("%3d: %s\n", i, table[i]);
+    }
+}
+
+int size_str(char **table, unsigned char *content)
+{
+    int i = 0, size = 0;
+    while (content[i] != '\0')
+        size += strlen(table[content[i++]]);
+    return size + 1;
+}
+
+char *encode(char **table, unsigned char *content)
+{
+    char *codigo = calloc(size_str(table, content), sizeof(char));
+    int i = 0;
+    while (content[i] != '\0')
+        strcat(codigo, table[content[i++]]);
+    return codigo;
+}
+
 int main()
 {
     setlocale(LC_ALL, "Portuguese");
 
-    Mode mode = get_mode();
+    unsigned char content[] = "Vamos aprender a programa";
 
-    unsigned char *content = NULL;
-    char *file_name = malloc(MAX_FILE_NAME_SIZE * sizeof(char));;
-    get_file_content(&content, file_name);
-
-    if (mode == COMP)
+    unsigned int freq[FREQ_SIZE];
+    for (int i = 0; i < FREQ_SIZE; i++)
     {
-        unsigned int freq[FREQ_SIZE];
-        for (int i = 0; i < FREQ_SIZE; i++)
-        {
-            freq[i] = 0;
-        }
-        get_freq(content, freq);
-        print_freq(freq);
-
-        List list;
-        create_list(&list);
-        fill_list(freq, &list);
-        print_list(&list);
-
+        freq[i] = 0;
     }
-    else
-    {
-        // TODO
-    }
+    get_freq(content, freq);
+    printf("\nfrequencias:\n");
+    print_freq(freq);
 
-    free(file_name);
-    free(content);
+    List list;
+    create_list(&list);
+    fill_list(freq, &list);
+    printf("\nlista:\n");
+    print_list(&list);
+
+    Node *tree = build_tree(&list);
+    printf("\narvore:\n");
+    print_tree(tree, 0);
+
+    int columns = tree_height(tree) + 1;
+    char **table = allocate_table(columns);
+    build_table(table, tree, "", columns);
+    printf("\ntabela:\n");
+    print_table(table);
+
+    char *encoded = encode(table, content);
+    printf("\ncodificado: %s\n", encoded);
 
     return 0;
 }
