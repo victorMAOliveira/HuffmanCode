@@ -146,7 +146,7 @@ Node *build_tree(List *list)
 void print_tree(Node *root, unsigned int size)
 {
     if (!root->left && !root->right)
-        printf("folha: %c\taltura: %u\n", *(unsigned char *)root->c, size);
+        printf("\tfolha: %c\taltura: %u\n", *(unsigned char *)root->c, size);
     else
     {
         print_tree(root->left, size + 1);
@@ -198,7 +198,7 @@ void print_table(char **table)
     for (int i = 0; i < FREQ_SIZE; i++)
     {
         if (strlen(table[i]) > 0)
-            printf("%3d: %s\n", i, table[i]);
+            printf("\t%3d: %s\n", i, table[i]);
     }
 }
 
@@ -233,10 +233,40 @@ char *decode(unsigned char content[], Node *root)
             aux = aux->right;
         if (!aux->left && !aux->right)
         {
-            temp[0] = (unsigned char *)aux->c;
+            temp[0] = *(unsigned char *)aux->c;
             temp[1] = '\0';
             strcat(decoded, temp);
             aux = root;
+        }
+        i++;
+    }
+    return decoded;
+}
+
+void compress(unsigned char str[], char file_name[])
+{
+    FILE *huff_file = fopen(file_name, "wb");
+    if (!huff_file)
+    {
+        printf("erro ao abrir arquivo em compress()\n");
+        return;
+    }
+    int i = 0, j = 7;
+    unsigned char byte = 0, mask;
+    while (str[i] != '\0')
+    {
+        mask = 1;
+        if (str[i] == '1')
+        {
+            mask = mask << j;
+            byte = byte | mask;
+        }
+        j--;
+        if (j < 0)
+        {
+            fwrite(&byte, sizeof(unsigned char), 1, huff_file);
+            byte = 0;
+            j = 7;
         }
         i++;
     }
@@ -246,7 +276,7 @@ int main()
 {
     setlocale(LC_ALL, "Portuguese");
 
-    unsigned char content[] = "Vamos aprender a programar";
+    unsigned char content[] = "Tio Marcio e fera";
 
     unsigned int freq[FREQ_SIZE];
     for (int i = 0; i < FREQ_SIZE; i++)
@@ -274,7 +304,10 @@ int main()
     print_table(table);
 
     char *encoded = encode(table, content);
-    printf("\ncodificado: %s\n", encoded);
+    printf("\n\tcodificado: %s\n", encoded);
+
+    char *decoded = decode(encoded, tree);
+    printf("\n\tdecodificado: %s\n", decoded);
 
     return 0;
 }
