@@ -219,11 +219,33 @@ char *encode(char **table, unsigned char *content)
     return codigo;
 }
 
+char *decode(unsigned char content[], Node *root)
+{
+    int i = 0;
+    Node *aux = root;
+    char *decoded = calloc(strlen(content), sizeof(char));
+    char temp[2];
+    while (content[i] != '\0')
+    {   
+        if (content[i] == '0')
+            aux = aux->left;
+        else
+            aux = aux->right;
+        if (!aux->left && !aux->right)
+        {
+            temp[0] = (unsigned char *)aux->c;
+            temp[1] = '\0';
+            strcat(decoded, temp);
+        }
+        i++;
+    }
+}
+
 int main()
 {
     setlocale(LC_ALL, "Portuguese");
 
-    unsigned char content[] = "Vamos aprender a programa";
+    unsigned char content[] = "Vamos aprender a programar";
 
     unsigned int freq[FREQ_SIZE];
     for (int i = 0; i < FREQ_SIZE; i++)
