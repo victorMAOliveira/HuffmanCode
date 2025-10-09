@@ -236,6 +236,7 @@ char *decode(unsigned char content[], Node *root)
             temp[0] = (unsigned char *)aux->c;
             temp[1] = '\0';
             strcat(decoded, temp);
+            aux = root;
         }
         i++;
     }
