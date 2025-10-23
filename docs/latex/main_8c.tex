@@ -1,0 +1,518 @@
+\doxysection{main.\+c File Reference}
+\hypertarget{main_8c}{}\label{main_8c}\index{main.c@{main.c}}
+
+
+Implementação completa do algoritmo de compressão e extração Huffman.  
+
+
+{\ttfamily \#include $<$locale.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{main_8c_struct_node}{Node}}
+\begin{DoxyCompactList}\small\item\em Nó da árvore de Huffman.  \mbox{\hyperlink{main_8c_struct_node}{More...}}\end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{main_8c_struct_list}{List}}
+\begin{DoxyCompactList}\small\item\em Lista encadeada ordenada usada para construir a árvore.  \mbox{\hyperlink{main_8c_struct_list}{More...}}\end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{main_8c_a5745e8a075423456b2ee9bbe723bc5f6}{FREQ\+\_\+\+SIZE}}~256
+\item 
+\#define \mbox{\hyperlink{main_8c_a0887cab1acf8e238e6777ab604ed7044}{MAX\+\_\+\+FILE\+\_\+\+NAME\+\_\+\+SIZE}}~1000
+\item 
+\#define \mbox{\hyperlink{main_8c_a4f74b67edc5a5b6d9f928fbae72ede83}{TREE\+\_\+\+BUFFER\+\_\+\+MAX\+\_\+\+SIZE}}~10000
+\item 
+\#define \mbox{\hyperlink{main_8c_ab702106cf3b3e96750b6845ded4e0299}{RESET}}~"{}\textbackslash{}033\mbox{[}0m"{}
+\item 
+\#define \mbox{\hyperlink{main_8c_a26cdbb1a00213c810caccf21cd33a631}{BOLD}}~"{}\textbackslash{}033\mbox{[}1m"{}
+\item 
+\#define \mbox{\hyperlink{main_8c_ad243f93c16bc4c1d3e0a13b84421d760}{CYAN}}~"{}\textbackslash{}033\mbox{[}36m"{}
+\item 
+\#define \mbox{\hyperlink{main_8c_acfbc006ea433ad708fdee3e82996e721}{GREEN}}~"{}\textbackslash{}033\mbox{[}32m"{}
+\item 
+\#define \mbox{\hyperlink{main_8c_abf681265909adf3d3e8116c93c0ba179}{YELLOW}}~"{}\textbackslash{}033\mbox{[}33m"{}
+\item 
+\#define \mbox{\hyperlink{main_8c_a8d23feea868a983c8c2b661e1e16972f}{RED}}~"{}\textbackslash{}033\mbox{[}31m"{}
+\item 
+\#define \mbox{\hyperlink{main_8c_a6f699060902f800f12aaae150f3a708e}{MAGENTA}}~"{}\textbackslash{}033\mbox{[}35m"{}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct Node \mbox{\hyperlink{main_8c_a3b09f37e675bcd48a01bf22155996872}{Node}}
+\item 
+typedef struct List \mbox{\hyperlink{main_8c_a61366e7da8638d66a464a4a6f4799199}{List}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{main_8c_a4953d1edcbbfc7e420c423ded1d5621a}{clear\+\_\+screen}} ()
+\begin{DoxyCompactList}\small\item\em Limpa o terminal. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a79406cae6ee85b845d7fed785dc18e69}{get\+\_\+freq}} (unsigned char \texorpdfstring{$\ast$}{*}content, unsigned int freq\mbox{[}$\,$\mbox{]}, size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Conta a frequência de cada caractere em um conteúdo. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a5d1f36cad661c6218bafe05db8fe90d6}{create\+\_\+list}} (\mbox{\hyperlink{main_8c_struct_list}{List}} \texorpdfstring{$\ast$}{*}list)
+\begin{DoxyCompactList}\small\item\em Inicializa uma lista vazia. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a7ef8244df2b94961e8a60168391c8419}{insert\+\_\+sorted}} (\mbox{\hyperlink{main_8c_struct_list}{List}} \texorpdfstring{$\ast$}{*}list, \mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}node)
+\begin{DoxyCompactList}\small\item\em Insere um nó na lista em ordem crescente de frequência. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a33b0ee8e0a14d8b817d3056d9318fdf1}{fill\+\_\+list}} (unsigned int freq\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{main_8c_struct_list}{List}} \texorpdfstring{$\ast$}{*}list)
+\begin{DoxyCompactList}\small\item\em Preenche a lista com nós criados a partir das frequências. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8c_a5f911df11ba891741b294c41ea1810cc}{remove\+\_\+begin}} (\mbox{\hyperlink{main_8c_struct_list}{List}} \texorpdfstring{$\ast$}{*}list)
+\begin{DoxyCompactList}\small\item\em Remove e retorna o primeiro nó da lista. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8c_a01225ee58bf913f142a76f738a84317a}{build\+\_\+tree}} (\mbox{\hyperlink{main_8c_struct_list}{List}} \texorpdfstring{$\ast$}{*}list)
+\begin{DoxyCompactList}\small\item\em Constrói a árvore de Huffman a partir da lista ordenada. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a80c68aac6ff64139de812f713db09b92}{free\+\_\+tree}} (\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}root)
+\begin{DoxyCompactList}\small\item\em Libera recursivamente toda a árvore de Huffman. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{main_8c_a644222f13f93332a2248674116afea78}{tree\+\_\+height}} (\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}root)
+\begin{DoxyCompactList}\small\item\em Calcula a altura da árvore. \end{DoxyCompactList}\item 
+char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8c_a35b1c7b4186b9b4d87e63f9de4c372cc}{allocate\+\_\+table}} (int columns)
+\begin{DoxyCompactList}\small\item\em Aloca a tabela de códigos binários dos caracteres. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a7cb9f8da967bd2e5ef7cd86d8356265e}{build\+\_\+table}} (char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}table, \mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}root, char \texorpdfstring{$\ast$}{*}path, int columns)
+\begin{DoxyCompactList}\small\item\em Constrói a tabela de códigos binários recursivamente. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{main_8c_af8bea1246af071ac71466a740af3ca2b}{size\+\_\+str}} (char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}table, unsigned char \texorpdfstring{$\ast$}{*}content, size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Retorna o tamanho total da string codificada. \end{DoxyCompactList}\item 
+char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8c_ac5f63418101856b290d42b32f4b0cdbc}{encode}} (char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}table, unsigned char \texorpdfstring{$\ast$}{*}content, size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Codifica o conteúdo original usando a tabela de Huffman. \end{DoxyCompactList}\item 
+unsigned int \mbox{\hyperlink{main_8c_a3d440d76d972516d045cc0ea6c750f38}{is\+\_\+bit\+\_\+one}} (unsigned char byte, int i)
+\begin{DoxyCompactList}\small\item\em Verifica se um determinado bit é 1 em um byte. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_adc0126aa5f5e46367ca7e251381d6e19}{build\+\_\+tree\+\_\+buffer}} (\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}root, char \texorpdfstring{$\ast$}{*}buffer, int \texorpdfstring{$\ast$}{*}index)
+\begin{DoxyCompactList}\small\item\em Gera a sequência binária da árvore de Huffman (pré-\/ordem). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a18ff46b38d7e4a77d73689f9d873ea35}{write\+\_\+bit\+\_\+str}} (FILE \texorpdfstring{$\ast$}{*}file, char \texorpdfstring{$\ast$}{*}bit\+\_\+str, int bit\+\_\+qnt)
+\begin{DoxyCompactList}\small\item\em Escreve uma sequência de bits como bytes em arquivo. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a740305cbd394629c056b6e6960ea90f5}{mount\+\_\+header}} (FILE \texorpdfstring{$\ast$}{*}file, unsigned char str\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}root)
+\begin{DoxyCompactList}\small\item\em Monta e grava o cabeçalho do arquivo .huff. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_abdfb6754846d045db710e281ca5a7a23}{compress}} (unsigned char str\mbox{[}$\,$\mbox{]}, char file\+\_\+name\mbox{[}$\,$\mbox{]}, \mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}root)
+\begin{DoxyCompactList}\small\item\em Comprime o conteúdo e escreve o arquivo .huff. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8c_a859cec9971e8fd96faee7432b3fc6e42}{build\+\_\+tree\+\_\+from\+\_\+bits}} (unsigned char \texorpdfstring{$\ast$}{*}buffer, int \texorpdfstring{$\ast$}{*}index, int total\+\_\+bits)
+\begin{DoxyCompactList}\small\item\em Reconstrói a árvore a partir dos bits do cabeçalho. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8c_a3bfe04fce11938733555e18248ea3b4a}{build\+\_\+tree\+\_\+from\+\_\+header}} (FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Lê o cabeçalho do arquivo .huff e reconstrói a árvore. \end{DoxyCompactList}\item 
+char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8c_a290a0d069e4197db7756f10126e6cac0}{file\+\_\+with\+\_\+extra\+\_\+huff}} (char \texorpdfstring{$\ast$}{*}file\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Gera o nome do arquivo comprimido (.huff). \end{DoxyCompactList}\item 
+char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8c_ab8e850c22f41e88d2f42413954d5a2d9}{remove\+\_\+huff\+\_\+extension}} (const char \texorpdfstring{$\ast$}{*}file\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Remove a extensão .huff do nome do arquivo. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a9b3b4020a6218cb230fb1104e5c6713d}{extract}} (char huff\+\_\+name\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Extrai um arquivo comprimido (.huff) para o original. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{main_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\begin{DoxyCompactList}\small\item\em Função principal do programa (menu interativo). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implementação completa do algoritmo de compressão e extração Huffman. 
+
+Este programa realiza compressão e descompressão de arquivos utilizando o algoritmo de Huffman, preservando a estrutura da árvore de codificação no cabeçalho do arquivo gerado (.huff).
+
+O código é dividido em módulos lógicos\+:
+\begin{DoxyItemize}
+\item Utilitários gerais (funções auxiliares)
+\item Estruturas e manipulação de lista ordenada
+\item Construção e destruição da árvore de Huffman
+\item Geração e leitura do cabeçalho
+\item Compressão e extração de arquivos
+\item Interface simples via terminal
+\end{DoxyItemize}
+
+\begin{DoxyAuthor}{Author}
+Victor Oliveira, Lorenzo Holanda, Lucitanea Lopes
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2025-\/10-\/23 
+\end{DoxyDate}
+
+
+\doxysubsection{Data Structure Documentation}
+\index{Node@{Node}}\label{struct_node}
+\Hypertarget{main_8c_struct_node}
+\doxysubsubsection{struct Node}
+Nó da árvore de Huffman. 
+
+Cada nó pode representar um caractere (folha) ou um nó interno com dois filhos (esquerdo e direito). \begin{DoxyFields}{Data Fields}
+\mbox{\Hypertarget{main_8c_af59bc3ae379b9d1a9984a0d90193bc5a}\label{main_8c_af59bc3ae379b9d1a9984a0d90193bc5a}} 
+void \texorpdfstring{$\ast$}{*}&
+c&
+Ponteiro genérico para o caractere armazenado. \\
+\hline
+
+\mbox{\Hypertarget{main_8c_ab7e584d3776e4c17f7dc7b3dbd7a7736}\label{main_8c_ab7e584d3776e4c17f7dc7b3dbd7a7736}} 
+void \texorpdfstring{$\ast$}{*}&
+freq&
+Frequência do caractere. \\
+\hline
+
+\mbox{\Hypertarget{main_8c_a51e39400a8c09497aa8370fe9a8261e6}\label{main_8c_a51e39400a8c09497aa8370fe9a8261e6}} 
+void \texorpdfstring{$\ast$}{*}&
+left&
+Filho esquerdo (subárvore esquerda). \\
+\hline
+
+\mbox{\Hypertarget{main_8c_a8a8320d2691f2f730b59f5df53f12d33}\label{main_8c_a8a8320d2691f2f730b59f5df53f12d33}} 
+void \texorpdfstring{$\ast$}{*}&
+next&
+Próximo nó da lista encadeada. \\
+\hline
+
+\mbox{\Hypertarget{main_8c_a8b010e25724822720ace7c5dd6a1447b}\label{main_8c_a8b010e25724822720ace7c5dd6a1447b}} 
+void \texorpdfstring{$\ast$}{*}&
+right&
+Filho direito (subárvore direita). \\
+\hline
+
+\end{DoxyFields}
+\index{List@{List}}\label{struct_list}
+\Hypertarget{main_8c_struct_list}
+\doxysubsubsection{struct List}
+Lista encadeada ordenada usada para construir a árvore. \begin{DoxyFields}{Data Fields}
+\mbox{\Hypertarget{main_8c_adae2efe46b2fec1142b6de7cc419be8d}\label{main_8c_adae2efe46b2fec1142b6de7cc419be8d}} 
+void \texorpdfstring{$\ast$}{*}&
+head&
+Cabeça da lista. \\
+\hline
+
+\mbox{\Hypertarget{main_8c_a040730166a51f5160e98f78dd2dc7aff}\label{main_8c_a040730166a51f5160e98f78dd2dc7aff}} 
+void \texorpdfstring{$\ast$}{*}&
+size&
+Quantidade de nós armazenados. \\
+\hline
+
+\end{DoxyFields}
+
+
+\label{doc-define-members}
+\Hypertarget{main_8c_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{main_8c_a26cdbb1a00213c810caccf21cd33a631}\index{main.c@{main.c}!BOLD@{BOLD}}
+\index{BOLD@{BOLD}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{BOLD}{BOLD}}
+{\footnotesize\ttfamily \label{main_8c_a26cdbb1a00213c810caccf21cd33a631} 
+\#define BOLD~"{}\textbackslash{}033\mbox{[}1m"{}}
+
+\Hypertarget{main_8c_ad243f93c16bc4c1d3e0a13b84421d760}\index{main.c@{main.c}!CYAN@{CYAN}}
+\index{CYAN@{CYAN}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{CYAN}{CYAN}}
+{\footnotesize\ttfamily \label{main_8c_ad243f93c16bc4c1d3e0a13b84421d760} 
+\#define CYAN~"{}\textbackslash{}033\mbox{[}36m"{}}
+
+\Hypertarget{main_8c_a5745e8a075423456b2ee9bbe723bc5f6}\index{main.c@{main.c}!FREQ\_SIZE@{FREQ\_SIZE}}
+\index{FREQ\_SIZE@{FREQ\_SIZE}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{FREQ\_SIZE}{FREQ\_SIZE}}
+{\footnotesize\ttfamily \label{main_8c_a5745e8a075423456b2ee9bbe723bc5f6} 
+\#define FREQ\+\_\+\+SIZE~256}
+
+\Hypertarget{main_8c_acfbc006ea433ad708fdee3e82996e721}\index{main.c@{main.c}!GREEN@{GREEN}}
+\index{GREEN@{GREEN}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{GREEN}{GREEN}}
+{\footnotesize\ttfamily \label{main_8c_acfbc006ea433ad708fdee3e82996e721} 
+\#define GREEN~"{}\textbackslash{}033\mbox{[}32m"{}}
+
+\Hypertarget{main_8c_a6f699060902f800f12aaae150f3a708e}\index{main.c@{main.c}!MAGENTA@{MAGENTA}}
+\index{MAGENTA@{MAGENTA}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{MAGENTA}{MAGENTA}}
+{\footnotesize\ttfamily \label{main_8c_a6f699060902f800f12aaae150f3a708e} 
+\#define MAGENTA~"{}\textbackslash{}033\mbox{[}35m"{}}
+
+\Hypertarget{main_8c_a0887cab1acf8e238e6777ab604ed7044}\index{main.c@{main.c}!MAX\_FILE\_NAME\_SIZE@{MAX\_FILE\_NAME\_SIZE}}
+\index{MAX\_FILE\_NAME\_SIZE@{MAX\_FILE\_NAME\_SIZE}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{MAX\_FILE\_NAME\_SIZE}{MAX\_FILE\_NAME\_SIZE}}
+{\footnotesize\ttfamily \label{main_8c_a0887cab1acf8e238e6777ab604ed7044} 
+\#define MAX\+\_\+\+FILE\+\_\+\+NAME\+\_\+\+SIZE~1000}
+
+\Hypertarget{main_8c_a8d23feea868a983c8c2b661e1e16972f}\index{main.c@{main.c}!RED@{RED}}
+\index{RED@{RED}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{RED}{RED}}
+{\footnotesize\ttfamily \label{main_8c_a8d23feea868a983c8c2b661e1e16972f} 
+\#define RED~"{}\textbackslash{}033\mbox{[}31m"{}}
+
+\Hypertarget{main_8c_ab702106cf3b3e96750b6845ded4e0299}\index{main.c@{main.c}!RESET@{RESET}}
+\index{RESET@{RESET}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{RESET}{RESET}}
+{\footnotesize\ttfamily \label{main_8c_ab702106cf3b3e96750b6845ded4e0299} 
+\#define RESET~"{}\textbackslash{}033\mbox{[}0m"{}}
+
+\Hypertarget{main_8c_a4f74b67edc5a5b6d9f928fbae72ede83}\index{main.c@{main.c}!TREE\_BUFFER\_MAX\_SIZE@{TREE\_BUFFER\_MAX\_SIZE}}
+\index{TREE\_BUFFER\_MAX\_SIZE@{TREE\_BUFFER\_MAX\_SIZE}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{TREE\_BUFFER\_MAX\_SIZE}{TREE\_BUFFER\_MAX\_SIZE}}
+{\footnotesize\ttfamily \label{main_8c_a4f74b67edc5a5b6d9f928fbae72ede83} 
+\#define TREE\+\_\+\+BUFFER\+\_\+\+MAX\+\_\+\+SIZE~10000}
+
+\Hypertarget{main_8c_abf681265909adf3d3e8116c93c0ba179}\index{main.c@{main.c}!YELLOW@{YELLOW}}
+\index{YELLOW@{YELLOW}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{YELLOW}{YELLOW}}
+{\footnotesize\ttfamily \label{main_8c_abf681265909adf3d3e8116c93c0ba179} 
+\#define YELLOW~"{}\textbackslash{}033\mbox{[}33m"{}}
+
+
+
+\label{doc-typedef-members}
+\Hypertarget{main_8c_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{main_8c_a61366e7da8638d66a464a4a6f4799199}\index{main.c@{main.c}!List@{List}}
+\index{List@{List}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{List}{List}}
+{\footnotesize\ttfamily \label{main_8c_a61366e7da8638d66a464a4a6f4799199} 
+typedef struct List List}
+
+\Hypertarget{main_8c_a3b09f37e675bcd48a01bf22155996872}\index{main.c@{main.c}!Node@{Node}}
+\index{Node@{Node}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{Node}{Node}}
+{\footnotesize\ttfamily \label{main_8c_a3b09f37e675bcd48a01bf22155996872} 
+typedef struct Node Node}
+
+
+
+\label{doc-func-members}
+\Hypertarget{main_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{main_8c_a35b1c7b4186b9b4d87e63f9de4c372cc}\index{main.c@{main.c}!allocate\_table@{allocate\_table}}
+\index{allocate\_table@{allocate\_table}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{allocate\_table()}{allocate\_table()}}
+{\footnotesize\ttfamily \label{main_8c_a35b1c7b4186b9b4d87e63f9de4c372cc} 
+char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} allocate\+\_\+table (\begin{DoxyParamCaption}\item[{int}]{columns}{}\end{DoxyParamCaption})}
+
+
+
+Aloca a tabela de códigos binários dos caracteres. 
+
+\Hypertarget{main_8c_a7cb9f8da967bd2e5ef7cd86d8356265e}\index{main.c@{main.c}!build\_table@{build\_table}}
+\index{build\_table@{build\_table}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{build\_table()}{build\_table()}}
+{\footnotesize\ttfamily \label{main_8c_a7cb9f8da967bd2e5ef7cd86d8356265e} 
+void build\+\_\+table (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{table}{, }\item[{\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}}]{root}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{path}{, }\item[{int}]{columns}{}\end{DoxyParamCaption})}
+
+
+
+Constrói a tabela de códigos binários recursivamente. 
+
+\Hypertarget{main_8c_a01225ee58bf913f142a76f738a84317a}\index{main.c@{main.c}!build\_tree@{build\_tree}}
+\index{build\_tree@{build\_tree}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{build\_tree()}{build\_tree()}}
+{\footnotesize\ttfamily \label{main_8c_a01225ee58bf913f142a76f738a84317a} 
+\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*} build\+\_\+tree (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{main_8c_struct_list}{List}} \texorpdfstring{$\ast$}{*}}]{list}{}\end{DoxyParamCaption})}
+
+
+
+Constrói a árvore de Huffman a partir da lista ordenada. 
+
+\Hypertarget{main_8c_adc0126aa5f5e46367ca7e251381d6e19}\index{main.c@{main.c}!build\_tree\_buffer@{build\_tree\_buffer}}
+\index{build\_tree\_buffer@{build\_tree\_buffer}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{build\_tree\_buffer()}{build\_tree\_buffer()}}
+{\footnotesize\ttfamily \label{main_8c_adc0126aa5f5e46367ca7e251381d6e19} 
+void build\+\_\+tree\+\_\+buffer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}}]{root}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{buffer}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{index}{}\end{DoxyParamCaption})}
+
+
+
+Gera a sequência binária da árvore de Huffman (pré-\/ordem). 
+
+\Hypertarget{main_8c_a859cec9971e8fd96faee7432b3fc6e42}\index{main.c@{main.c}!build\_tree\_from\_bits@{build\_tree\_from\_bits}}
+\index{build\_tree\_from\_bits@{build\_tree\_from\_bits}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{build\_tree\_from\_bits()}{build\_tree\_from\_bits()}}
+{\footnotesize\ttfamily \label{main_8c_a859cec9971e8fd96faee7432b3fc6e42} 
+\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*} build\+\_\+tree\+\_\+from\+\_\+bits (\begin{DoxyParamCaption}\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{buffer}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{index}{, }\item[{int}]{total\+\_\+bits}{}\end{DoxyParamCaption})}
+
+
+
+Reconstrói a árvore a partir dos bits do cabeçalho. 
+
+\Hypertarget{main_8c_a3bfe04fce11938733555e18248ea3b4a}\index{main.c@{main.c}!build\_tree\_from\_header@{build\_tree\_from\_header}}
+\index{build\_tree\_from\_header@{build\_tree\_from\_header}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{build\_tree\_from\_header()}{build\_tree\_from\_header()}}
+{\footnotesize\ttfamily \label{main_8c_a3bfe04fce11938733555e18248ea3b4a} 
+\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*} build\+\_\+tree\+\_\+from\+\_\+header (\begin{DoxyParamCaption}\item[{FILE \texorpdfstring{$\ast$}{*}}]{file}{}\end{DoxyParamCaption})}
+
+
+
+Lê o cabeçalho do arquivo .huff e reconstrói a árvore. 
+
+\Hypertarget{main_8c_a4953d1edcbbfc7e420c423ded1d5621a}\index{main.c@{main.c}!clear\_screen@{clear\_screen}}
+\index{clear\_screen@{clear\_screen}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{clear\_screen()}{clear\_screen()}}
+{\footnotesize\ttfamily \label{main_8c_a4953d1edcbbfc7e420c423ded1d5621a} 
+void clear\+\_\+screen (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Limpa o terminal. 
+
+\Hypertarget{main_8c_abdfb6754846d045db710e281ca5a7a23}\index{main.c@{main.c}!compress@{compress}}
+\index{compress@{compress}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{compress()}{compress()}}
+{\footnotesize\ttfamily \label{main_8c_abdfb6754846d045db710e281ca5a7a23} 
+void compress (\begin{DoxyParamCaption}\item[{unsigned char}]{str}{\mbox{[}$\,$\mbox{]}, }\item[{char}]{file\+\_\+name}{\mbox{[}$\,$\mbox{]}, }\item[{\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}}]{root}{}\end{DoxyParamCaption})}
+
+
+
+Comprime o conteúdo e escreve o arquivo .huff. 
+
+\Hypertarget{main_8c_a5d1f36cad661c6218bafe05db8fe90d6}\index{main.c@{main.c}!create\_list@{create\_list}}
+\index{create\_list@{create\_list}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{create\_list()}{create\_list()}}
+{\footnotesize\ttfamily \label{main_8c_a5d1f36cad661c6218bafe05db8fe90d6} 
+void create\+\_\+list (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{main_8c_struct_list}{List}} \texorpdfstring{$\ast$}{*}}]{list}{}\end{DoxyParamCaption})}
+
+
+
+Inicializa uma lista vazia. 
+
+\Hypertarget{main_8c_ac5f63418101856b290d42b32f4b0cdbc}\index{main.c@{main.c}!encode@{encode}}
+\index{encode@{encode}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{encode()}{encode()}}
+{\footnotesize\ttfamily \label{main_8c_ac5f63418101856b290d42b32f4b0cdbc} 
+char \texorpdfstring{$\ast$}{*} encode (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{table}{, }\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{content}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})}
+
+
+
+Codifica o conteúdo original usando a tabela de Huffman. 
+
+\Hypertarget{main_8c_a9b3b4020a6218cb230fb1104e5c6713d}\index{main.c@{main.c}!extract@{extract}}
+\index{extract@{extract}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{extract()}{extract()}}
+{\footnotesize\ttfamily \label{main_8c_a9b3b4020a6218cb230fb1104e5c6713d} 
+void extract (\begin{DoxyParamCaption}\item[{char}]{huff\+\_\+name}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})}
+
+
+
+Extrai um arquivo comprimido (.huff) para o original. 
+
+\Hypertarget{main_8c_a290a0d069e4197db7756f10126e6cac0}\index{main.c@{main.c}!file\_with\_extra\_huff@{file\_with\_extra\_huff}}
+\index{file\_with\_extra\_huff@{file\_with\_extra\_huff}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{file\_with\_extra\_huff()}{file\_with\_extra\_huff()}}
+{\footnotesize\ttfamily \label{main_8c_a290a0d069e4197db7756f10126e6cac0} 
+char \texorpdfstring{$\ast$}{*} file\+\_\+with\+\_\+extra\+\_\+huff (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{file\+\_\+name}{}\end{DoxyParamCaption})}
+
+
+
+Gera o nome do arquivo comprimido (.huff). 
+
+\Hypertarget{main_8c_a33b0ee8e0a14d8b817d3056d9318fdf1}\index{main.c@{main.c}!fill\_list@{fill\_list}}
+\index{fill\_list@{fill\_list}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{fill\_list()}{fill\_list()}}
+{\footnotesize\ttfamily \label{main_8c_a33b0ee8e0a14d8b817d3056d9318fdf1} 
+void fill\+\_\+list (\begin{DoxyParamCaption}\item[{unsigned int}]{freq}{\mbox{[}$\,$\mbox{]}, }\item[{\mbox{\hyperlink{main_8c_struct_list}{List}} \texorpdfstring{$\ast$}{*}}]{list}{}\end{DoxyParamCaption})}
+
+
+
+Preenche a lista com nós criados a partir das frequências. 
+
+\Hypertarget{main_8c_a80c68aac6ff64139de812f713db09b92}\index{main.c@{main.c}!free\_tree@{free\_tree}}
+\index{free\_tree@{free\_tree}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{free\_tree()}{free\_tree()}}
+{\footnotesize\ttfamily \label{main_8c_a80c68aac6ff64139de812f713db09b92} 
+void free\+\_\+tree (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}}]{root}{}\end{DoxyParamCaption})}
+
+
+
+Libera recursivamente toda a árvore de Huffman. 
+
+\Hypertarget{main_8c_a79406cae6ee85b845d7fed785dc18e69}\index{main.c@{main.c}!get\_freq@{get\_freq}}
+\index{get\_freq@{get\_freq}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{get\_freq()}{get\_freq()}}
+{\footnotesize\ttfamily \label{main_8c_a79406cae6ee85b845d7fed785dc18e69} 
+void get\+\_\+freq (\begin{DoxyParamCaption}\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{content}{, }\item[{unsigned int}]{freq}{\mbox{[}$\,$\mbox{]}, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})}
+
+
+
+Conta a frequência de cada caractere em um conteúdo. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em content} & Vetor de bytes do arquivo \\
+\hline
+{\em freq} & Vetor de frequências (tamanho 256) \\
+\hline
+{\em size} & Tamanho do conteúdo \\
+\hline
+\end{DoxyParams}
+\Hypertarget{main_8c_a7ef8244df2b94961e8a60168391c8419}\index{main.c@{main.c}!insert\_sorted@{insert\_sorted}}
+\index{insert\_sorted@{insert\_sorted}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{insert\_sorted()}{insert\_sorted()}}
+{\footnotesize\ttfamily \label{main_8c_a7ef8244df2b94961e8a60168391c8419} 
+void insert\+\_\+sorted (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{main_8c_struct_list}{List}} \texorpdfstring{$\ast$}{*}}]{list}{, }\item[{\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}}]{node}{}\end{DoxyParamCaption})}
+
+
+
+Insere um nó na lista em ordem crescente de frequência. 
+
+\Hypertarget{main_8c_a3d440d76d972516d045cc0ea6c750f38}\index{main.c@{main.c}!is\_bit\_one@{is\_bit\_one}}
+\index{is\_bit\_one@{is\_bit\_one}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{is\_bit\_one()}{is\_bit\_one()}}
+{\footnotesize\ttfamily \label{main_8c_a3d440d76d972516d045cc0ea6c750f38} 
+unsigned int is\+\_\+bit\+\_\+one (\begin{DoxyParamCaption}\item[{unsigned char}]{byte}{, }\item[{int}]{i}{}\end{DoxyParamCaption})}
+
+
+
+Verifica se um determinado bit é 1 em um byte. 
+
+\Hypertarget{main_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}\index{main.c@{main.c}!main@{main}}
+\index{main@{main}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{main_8c_ae66f6b31b5ad750f1fe042a706a4e3d4} 
+int main (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Função principal do programa (menu interativo). 
+
+\Hypertarget{main_8c_a740305cbd394629c056b6e6960ea90f5}\index{main.c@{main.c}!mount\_header@{mount\_header}}
+\index{mount\_header@{mount\_header}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{mount\_header()}{mount\_header()}}
+{\footnotesize\ttfamily \label{main_8c_a740305cbd394629c056b6e6960ea90f5} 
+void mount\+\_\+header (\begin{DoxyParamCaption}\item[{FILE \texorpdfstring{$\ast$}{*}}]{file}{, }\item[{unsigned char}]{str}{\mbox{[}$\,$\mbox{]}, }\item[{\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}}]{root}{}\end{DoxyParamCaption})}
+
+
+
+Monta e grava o cabeçalho do arquivo .huff. 
+
+\Hypertarget{main_8c_a5f911df11ba891741b294c41ea1810cc}\index{main.c@{main.c}!remove\_begin@{remove\_begin}}
+\index{remove\_begin@{remove\_begin}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{remove\_begin()}{remove\_begin()}}
+{\footnotesize\ttfamily \label{main_8c_a5f911df11ba891741b294c41ea1810cc} 
+\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*} remove\+\_\+begin (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{main_8c_struct_list}{List}} \texorpdfstring{$\ast$}{*}}]{list}{}\end{DoxyParamCaption})}
+
+
+
+Remove e retorna o primeiro nó da lista. 
+
+\Hypertarget{main_8c_ab8e850c22f41e88d2f42413954d5a2d9}\index{main.c@{main.c}!remove\_huff\_extension@{remove\_huff\_extension}}
+\index{remove\_huff\_extension@{remove\_huff\_extension}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{remove\_huff\_extension()}{remove\_huff\_extension()}}
+{\footnotesize\ttfamily \label{main_8c_ab8e850c22f41e88d2f42413954d5a2d9} 
+char \texorpdfstring{$\ast$}{*} remove\+\_\+huff\+\_\+extension (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{file\+\_\+name}{}\end{DoxyParamCaption})}
+
+
+
+Remove a extensão .huff do nome do arquivo. 
+
+\Hypertarget{main_8c_af8bea1246af071ac71466a740af3ca2b}\index{main.c@{main.c}!size\_str@{size\_str}}
+\index{size\_str@{size\_str}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{size\_str()}{size\_str()}}
+{\footnotesize\ttfamily \label{main_8c_af8bea1246af071ac71466a740af3ca2b} 
+int size\+\_\+str (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{table}{, }\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{content}{, }\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})}
+
+
+
+Retorna o tamanho total da string codificada. 
+
+\Hypertarget{main_8c_a644222f13f93332a2248674116afea78}\index{main.c@{main.c}!tree\_height@{tree\_height}}
+\index{tree\_height@{tree\_height}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{tree\_height()}{tree\_height()}}
+{\footnotesize\ttfamily \label{main_8c_a644222f13f93332a2248674116afea78} 
+int tree\+\_\+height (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{main_8c_struct_node}{Node}} \texorpdfstring{$\ast$}{*}}]{root}{}\end{DoxyParamCaption})}
+
+
+
+Calcula a altura da árvore. 
+
+\Hypertarget{main_8c_a18ff46b38d7e4a77d73689f9d873ea35}\index{main.c@{main.c}!write\_bit\_str@{write\_bit\_str}}
+\index{write\_bit\_str@{write\_bit\_str}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{write\_bit\_str()}{write\_bit\_str()}}
+{\footnotesize\ttfamily \label{main_8c_a18ff46b38d7e4a77d73689f9d873ea35} 
+void write\+\_\+bit\+\_\+str (\begin{DoxyParamCaption}\item[{FILE \texorpdfstring{$\ast$}{*}}]{file}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{bit\+\_\+str}{, }\item[{int}]{bit\+\_\+qnt}{}\end{DoxyParamCaption})}
+
+
+
+Escreve uma sequência de bits como bytes em arquivo. 
+

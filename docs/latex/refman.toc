@@ -1,0 +1,48 @@
+\@ifundefined {etoctocstyle}{\let \etoc@startlocaltoc \@gobble \let \etoc@settocdepth \@gobble \let \etoc@depthtag \@gobble \let \etoc@setlocaltop \@gobble }{}
+\contentsline {chapter}{\numberline {1}File Index}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}File List}{1}{section.1.1}%
+\contentsline {chapter}{\numberline {2}File Documentation}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}main.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c File Reference}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Detailed Description}{5}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Data Structure Documentation}{5}{subsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.2.1}struct Node}{5}{subsubsection.2.1.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.2.2}struct List}{5}{subsubsection.2.1.2.2}%
+\contentsline {subsection}{\numberline {2.1.3}Macro Definition Documentation}{6}{subsection.2.1.3}%
+\contentsline {subsubsection}{\numberline {2.1.3.1}BOLD}{6}{subsubsection.2.1.3.1}%
+\contentsline {subsubsection}{\numberline {2.1.3.2}CYAN}{6}{subsubsection.2.1.3.2}%
+\contentsline {subsubsection}{\numberline {2.1.3.3}FREQ\_SIZE}{6}{subsubsection.2.1.3.3}%
+\contentsline {subsubsection}{\numberline {2.1.3.4}GREEN}{6}{subsubsection.2.1.3.4}%
+\contentsline {subsubsection}{\numberline {2.1.3.5}MAGENTA}{6}{subsubsection.2.1.3.5}%
+\contentsline {subsubsection}{\numberline {2.1.3.6}MAX\_FILE\_NAME\_SIZE}{6}{subsubsection.2.1.3.6}%
+\contentsline {subsubsection}{\numberline {2.1.3.7}RED}{6}{subsubsection.2.1.3.7}%
+\contentsline {subsubsection}{\numberline {2.1.3.8}RESET}{6}{subsubsection.2.1.3.8}%
+\contentsline {subsubsection}{\numberline {2.1.3.9}TREE\_BUFFER\_MAX\_SIZE}{6}{subsubsection.2.1.3.9}%
+\contentsline {subsubsection}{\numberline {2.1.3.10}YELLOW}{7}{subsubsection.2.1.3.10}%
+\contentsline {subsection}{\numberline {2.1.4}Typedef Documentation}{7}{subsection.2.1.4}%
+\contentsline {subsubsection}{\numberline {2.1.4.1}List}{7}{subsubsection.2.1.4.1}%
+\contentsline {subsubsection}{\numberline {2.1.4.2}Node}{7}{subsubsection.2.1.4.2}%
+\contentsline {subsection}{\numberline {2.1.5}Function Documentation}{7}{subsection.2.1.5}%
+\contentsline {subsubsection}{\numberline {2.1.5.1}allocate\_table()}{7}{subsubsection.2.1.5.1}%
+\contentsline {subsubsection}{\numberline {2.1.5.2}build\_table()}{7}{subsubsection.2.1.5.2}%
+\contentsline {subsubsection}{\numberline {2.1.5.3}build\_tree()}{7}{subsubsection.2.1.5.3}%
+\contentsline {subsubsection}{\numberline {2.1.5.4}build\_tree\_buffer()}{7}{subsubsection.2.1.5.4}%
+\contentsline {subsubsection}{\numberline {2.1.5.5}build\_tree\_from\_bits()}{8}{subsubsection.2.1.5.5}%
+\contentsline {subsubsection}{\numberline {2.1.5.6}build\_tree\_from\_header()}{8}{subsubsection.2.1.5.6}%
+\contentsline {subsubsection}{\numberline {2.1.5.7}clear\_screen()}{8}{subsubsection.2.1.5.7}%
+\contentsline {subsubsection}{\numberline {2.1.5.8}compress()}{8}{subsubsection.2.1.5.8}%
+\contentsline {subsubsection}{\numberline {2.1.5.9}create\_list()}{8}{subsubsection.2.1.5.9}%
+\contentsline {subsubsection}{\numberline {2.1.5.10}encode()}{8}{subsubsection.2.1.5.10}%
+\contentsline {subsubsection}{\numberline {2.1.5.11}extract()}{9}{subsubsection.2.1.5.11}%
+\contentsline {subsubsection}{\numberline {2.1.5.12}file\_with\_extra\_huff()}{9}{subsubsection.2.1.5.12}%
+\contentsline {subsubsection}{\numberline {2.1.5.13}fill\_list()}{9}{subsubsection.2.1.5.13}%
+\contentsline {subsubsection}{\numberline {2.1.5.14}free\_tree()}{9}{subsubsection.2.1.5.14}%
+\contentsline {subsubsection}{\numberline {2.1.5.15}get\_freq()}{9}{subsubsection.2.1.5.15}%
+\contentsline {subsubsection}{\numberline {2.1.5.16}insert\_sorted()}{10}{subsubsection.2.1.5.16}%
+\contentsline {subsubsection}{\numberline {2.1.5.17}is\_bit\_one()}{10}{subsubsection.2.1.5.17}%
+\contentsline {subsubsection}{\numberline {2.1.5.18}main()}{10}{subsubsection.2.1.5.18}%
+\contentsline {subsubsection}{\numberline {2.1.5.19}mount\_header()}{10}{subsubsection.2.1.5.19}%
+\contentsline {subsubsection}{\numberline {2.1.5.20}remove\_begin()}{10}{subsubsection.2.1.5.20}%
+\contentsline {subsubsection}{\numberline {2.1.5.21}remove\_huff\_extension()}{10}{subsubsection.2.1.5.21}%
+\contentsline {subsubsection}{\numberline {2.1.5.22}size\_str()}{11}{subsubsection.2.1.5.22}%
+\contentsline {subsubsection}{\numberline {2.1.5.23}tree\_height()}{11}{subsubsection.2.1.5.23}%
+\contentsline {subsubsection}{\numberline {2.1.5.24}write\_bit\_str()}{11}{subsubsection.2.1.5.24}%
